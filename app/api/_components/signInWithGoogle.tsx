@@ -2,7 +2,7 @@
 
 import { signIn } from "next-auth/react";
 
-const SigninwithGoogle = () => {
+const SignInWithGoogle = () => {
     return (
         <button
             type="button"
@@ -17,4 +17,4 @@ const SigninwithGoogle = () => {
 
 }
 
-export default SigninwithGoogle;
+export default SignInWithGoogle;
