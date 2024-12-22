@@ -1,9 +1,17 @@
 'use client';
 
 import {useSession} from "next-auth/react";
+import { useEffect } from 'react'
+import {echo} from "@/app/lib/echo";
 
 const SessionsSelector = () => {
     const {status} = useSession();
+    useEffect(()=> {
+        echo.channel('private-session.9daa9a85-b8f6-4eb8-90b8-d8ada7ad0229')
+            .on('wa_message', function(data: unknown){
+                console.log(data);
+            });
+    });
 
     if (status != 'authenticated') return (<></>);
 
