@@ -1,9 +1,11 @@
 import axios from 'axios';
-import {getServerSession} from "next-auth";
+import {getServerSession, Session} from "next-auth";
 import {authOptions} from "@/app/lib/nextAuth";
+import { NextRequest } from 'next/server';
+import { AxiosError } from 'axios';
 
-export async function POST(req) {
-    const session = await getServerSession(authOptions);
+export async function POST(req: NextRequest) {
+    const session: Session|null = await getServerSession(authOptions);
 
     if (!session || !session.user) {
         return new Response(
@@ -16,8 +18,11 @@ export async function POST(req) {
         const formData = await req.text();
 
         // Forward the request to Laravel with the user's token
-        const response = await axios.post(
-            `${process.env.API_URL}broadcasting/auth`,
+        const response = await axios.create({
+            baseURL: process.env.API_URL as string,
+            timeout: 10000,
+        }).post(
+            `broadcasting/auth`,
             formData, // Forward form-encoded data as-is
             {
                 headers: {
@@ -30,12 +35,17 @@ export async function POST(req) {
         return new Response(JSON.stringify(response.data), {
             status: response.status,
         });
-    } catch (error) {
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            return new Response(
+                JSON.stringify({ message: error.response?.data?.message || 'Internal Server Error' }),
+                { status: error.response?.status || 500 }
+            );
+        }
+
         return new Response(
-            JSON.stringify({
-                message: error.response?.data?.message || 'Internal Server Error',
-            }),
-            {status: error.response?.status || 500}
+            JSON.stringify({ message: 'Unexpected Error' }),
+            { status: 500 }
         );
     }
 }
