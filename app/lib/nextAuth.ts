@@ -30,10 +30,10 @@ export const authOptions: AuthOptions = {
 
                     if (user) {
                         return {
-                            id: user.id,
+                            id: user.id as string,
                             name: user.name,
                             email: user.email,
-                            token: response.data.token,
+                            accessToken: response.data.token,
                         };
                     }
 
@@ -62,16 +62,16 @@ export const authOptions: AuthOptions = {
                 token.id = user.id;
                 token.name = user.name;
                 token.email = user.email;
-                token.accessToken = user.token;
+                token.accessToken = user.accessToken;
             }
             return token;
         },
         async session({ session, token }) {
             session.user = {
-                id: token.id,
+                id: token.id as string|undefined,
                 name: token.name,
                 email: token.email,
-                accessToken: token.accessToken,
+                accessToken: token.accessToken as string|undefined,
             };
             return session;
         },
