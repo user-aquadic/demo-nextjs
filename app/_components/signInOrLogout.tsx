@@ -7,10 +7,15 @@ const SignInOrLogout = () => {
 
     return (
         <>
-            {status === 'loading' && <p> Loading... </p>}
+            {
+                status === 'loading' && <span className={`text-purple-500`}>
+                    Loading...
+                </span>
+            }
             {
                 status === 'unauthenticated' && <button
                     type="button"
+                    className={`text-purple-500`}
                     onClick={() => {
                         signIn()
                     }}
@@ -21,6 +26,7 @@ const SignInOrLogout = () => {
             {
                 status === 'authenticated' && <button
                     type="button"
+                    className={`text-purple-500`}
                     onClick={() => {
                         signOut()
                     }}
