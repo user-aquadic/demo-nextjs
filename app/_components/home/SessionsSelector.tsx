@@ -11,7 +11,8 @@ const SessionsSelector = () => {
     useEffect(() => {
         echo.channel('private-session.9b514696-e6bd-4e81-9b32-cd98abe57a75')
             .on('wa_message', function (data: {  payload: {body : string} }) {
-                setNotifications((prev: Array<string>) => [...prev, data.payload.body]);
+                const message = data.payload.body.substring(0, 20); // Trim to first 20 characters
+                setNotifications((prev: Array<string>) => [...prev, message]);
             });
 
         // Cleanup on unmount
